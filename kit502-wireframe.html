@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIT502 – EventHub Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #0f1923;
+    --deep:   #162233;
+    --panel:  #1e2f42;
+    --accent: #e8a020;
+    --teal:   #2ec4b6;
+    --muted:  #6b7f96;
+    --light:  #c8d8ea;
+    --white:  #f0f6ff;
+    --danger: #e05252;
+    --success:#3dbf7e;
+    --border: rgba(200,216,234,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--white);min-height:100vh;display:flex;flex-direction:column;}
+
+  /* ── PAGE SWITCHER ── */
+  #page-bar{
+    display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;
+    background:var(--deep);border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:999;
+  }
+  #page-bar span{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;color:var(--muted);align-self:center;margin-right:4px;letter-spacing:.08em;text-transform:uppercase;}
+  .pg-btn{
+    padding:5px 13px;border:1px solid var(--border);border-radius:20px;
+    font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;
+    background:transparent;color:var(--light);transition:all .2s;white-space:nowrap;
+  }
+  .pg-btn:hover{border-color:var(--teal);color:var(--teal);}
+  .pg-btn.active{background:var(--accent);border-color:var(--accent);color:var(--ink);font-weight:700;}
+
+  /* ── PAGES ── */
+  .page{display:none;flex-direction:column;min-height:calc(100vh - 48px);}
+  .page.active{display:flex;}
+
+  /* ── SHARED NAV ── */
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;height:60px;background:var(--deep);
+    border-bottom:1px solid var(--border);flex-shrink:0;
+  }
+  .nav-logo{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--accent);letter-spacing:-.02em;}
+  .nav-logo span{color:var(--teal);}
+  .nav-links{display:flex;gap:28px;list-style:none;}
+  .nav-links a{font-size:.85rem;color:var(--light);text-decoration:none;transition:color .2s;cursor:pointer;}
+  .nav-links a:hover,.nav-links a.active{color:var(--accent);}
+  .nav-cta{display:flex;gap:10px;}
+  .btn{padding:8px 20px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;}
+  .btn-outline{background:transparent;border:1px solid var(--teal);color:var(--teal);}
+  .btn-outline:hover{background:var(--teal);color:var(--ink);}
+  .btn-primary{background:var(--accent);color:var(--ink);font-weight:700;}
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--light);}
+  .btn-ghost:hover{border-color:var(--light);}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-sm{padding:5px 13px;font-size:.75rem;}
+  .btn-success{background:var(--success);color:#fff;}
+
+  /* ── HERO ── */
+  .hero{
+    padding:80px 40px 60px;
+    background:linear-gradient(135deg,var(--deep) 0%,#0d2035 60%,#0f2840 100%);
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 60% 80% at 70% 50%,rgba(46,196,182,.08),transparent);
+  }
+  .hero-badge{display:inline-block;padding:4px 12px;background:rgba(232,160,32,.15);border:1px solid rgba(232,160,32,.3);border-radius:20px;font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px;}
+  .hero h1{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;line-height:1.1;margin-bottom:16px;max-width:560px;}
+  .hero h1 em{font-style:normal;color:var(--teal);}
+  .hero p{color:var(--muted);max-width:480px;line-height:1.7;margin-bottom:32px;}
+  .hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+  /* ── EVENT CARDS ── */
+  .section{padding:56px 40px;}
+  .section-label{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+  .section-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;margin-bottom:32px;}
+  .events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+  .event-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .2s,border-color .2s;}
+  .event-card:hover{transform:translateY(-3px);border-color:var(--teal);}
+  .event-img{height:140px;background:linear-gradient(135deg,#1a3a5c,#0d2a42);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+  .event-body{padding:18px;}
+  .event-cat{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:6px;}
+  .event-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px;}
+  .event-meta{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+  .event-meta span{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .event-footer{display:flex;align-items:center;justify-content:space-between;}
+  .price{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--accent);}
+  .price.free{color:var(--success);}
+
+  /* ── FORM PAGES ── */
+  .form-page{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:var(--ink);}
+  .form-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:480px;}
+  .form-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+  .form-sub{color:var(--muted);font-size:.85rem;margin-bottom:28px;}
+  .form-group{margin-bottom:18px;}
+  label{display:block;font-size:.78rem;font-weight:500;color:var(--light);margin-bottom:6px;letter-spacing:.03em;}
+  input,select,textarea{
+    width:100%;padding:10px 14px;background:rgba(255,255,255,.05);
+    border:1px solid var(--border);border-radius:8px;color:var(--white);
+    font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;
+    transition:border-color .2s;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--teal);}
+  select option{background:var(--deep);}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .form-hint{font-size:.72rem;color:var(--muted);margin-top:4px;}
+  .form-actions{display:flex;gap:10px;margin-top:24px;}
+  .form-actions .btn{flex:1;padding:11px;}
+  .divider{text-align:center;color:var(--muted);font-size:.8rem;margin:18px 0;position:relative;}
+  .divider::before,.divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border);}
+  .divider::before{left:0;} .divider::after{right:0;}
+  .link-row{text-align:center;font-size:.82rem;color:var(--muted);margin-top:16px;}
+  .link-row a{color:var(--teal);cursor:pointer;}
+
+  /* ── TABLE ── */
+  .content-wrap{flex:1;padding:36px 40px;}
+  .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+  .page-header h2{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;}
+  table{width:100%;border-collapse:collapse;}
+  th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
+  td{padding:14px 14px;border-bottom:1px solid rgba(200,216,234,.06);font-size:.85rem;vertical-align:middle;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .badge-confirmed{background:rgba(61,191,126,.15);color:var(--success);}
+  .badge-draft{background:rgba(107,127,150,.15);color:var(--muted);}
+  .badge-cancelled{background:rgba(224,82,82,.15);color:var(--danger);}
+  .td-actions{display:flex;gap:6px;}
+
+  /* ── ADMIN DASHBOARD ── */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+  .stat-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px;}
+  .stat-icon{font-size:1.5rem;margin-bottom:10px;}
+  .stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:2px;}
+  .stat-label{font-size:.78rem;color:var(--muted);}
+  .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .admin-panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;}
+  .admin-panel h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+  /* ── FOOTER ── */
+  footer{padding:24px 40px;background:var(--deep);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  footer p{font-size:.78rem;color:var(--muted);}
+  footer .footer-links{display:flex;gap:20px;}
+  footer .footer-links a{font-size:.78rem;color:var(--muted);text-decoration:none;}
+  footer .footer-links a:hover{color:var(--teal);}
+
+  /* ── ANNOTATION CHIP ── */
+  .annot{
+    display:inline-block;padding:2px 8px;border-radius:4px;
+    background:rgba(232,160,32,.18);border:1px dashed rgba(232,160,32,.4);
+    font-size:.65rem;font-weight:700;color:var(--accent);
+    letter-spacing:.04em;text-transform:uppercase;margin-left:6px;vertical-align:middle;
+  }
+
+  /* Role pill in nav */
+  .role-pill{padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;background:rgba(46,196,182,.15);color:var(--teal);border:1px solid rgba(46,196,182,.3);}
+  .user-chip{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--light);}
+  .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--accent));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--ink);}
+
+  /* upload box */
+  .upload-box{border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;color:var(--muted);font-size:.82rem;cursor:pointer;transition:all .2s;}
+  .upload-box:hover{border-color:var(--teal);color:var(--teal);}
+
+  @media(max-width:640px){
+    .hero h1{font-size:2rem;}
+    .admin-grid{grid-template-columns:1fr;}
+    nav{padding:0 16px;}
+    .content-wrap{padding:24px 16px;}
+    .section{padding:32px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE SWITCHER BAR -->
+<div id="page-bar">
+  <span>Pages →</span>
+  <button class="pg-btn active"  onclick="show('landing')">🏠 Landing</button>
+  <button class="pg-btn"         onclick="show('register')">📋 Register</button>
+  <button class="pg-btn"         onclick="show('login')">🔑 Login</button>
+  <button class="pg-btn"         onclick="show('create-event')">➕ Create Event</button>
+  <button class="pg-btn"         onclick="show('event-mgmt')">📅 Event Management</button>
+  <button class="pg-btn"         onclick="show('admin')">🛡 Admin Dashboard</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — LANDING
+═══════════════════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a class="active">Home</a></li>
+      <li><a>Events</a></li>
+      <li><a>About</a></li>
+      <li><a>Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="btn btn-outline btn-sm" onclick="show('login')">Login</button>
+      <button class="btn btn-primary btn-sm" onclick="show('register')">Register</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">✦ Discover · Connect · Celebrate</div>
+    <h1>Your next unforgettable<br><em>experience</em> awaits</h1>
+    <p>Browse upcoming concerts, workshops, conferences and more. Register in seconds and secure your spot today.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary">Explore Events</button>
+      <button class="btn btn-outline">Learn More</button>
+    </div>
+    <div style="margin-top:36px;height:180px;background:linear-gradient(135deg,rgba(46,196,182,.12),rgba(232,160,32,.08));border:1px dashed rgba(200,216,234,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem;">
+      📷 &nbsp; Hero / Banner Image Placeholder <span class="annot">required image</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Upcoming Events</div>
+    <div class="section-title">Don't miss out <span class="annot">min. 2 events</span></div>
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-img">🎵</div>
+        <div class="event-body">
+          <div class="event-cat">Music</div>
+          <div class="event-title">Summer Sound Festival 2026</div>
+          <div class="event-meta">
+            <span>📅 12 Jul 2026</span>
+            <span>📍 Hobart, TAS</span>
+          </div>
+          <div class="event-footer">
+            <div class="price">$49.00</div>
+            <button class="btn btn-primary btn-sm">Buy Ticket</button>
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-img">💻</div>
+        <div class="event-body">
+          <div class="event-cat">Tech</div>
+          <div class="event-title">DevConf Tasmania 2026</div>
+          <div class="event-meta">
+            <span>📅 5 Aug 2026</span>
+            <span>📍 UTAS, Sandy Bay</span>
+          </div>
+          <div class="event-footer">
+            <div class="price free">Free</div>
+            <button class="btn btn-primary btn-sm">Buy Ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub — KIT502 Assignment</p>
+    <div class="footer-links">
+      <a>Privacy</a><a>Terms</a><a>Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — REGISTER
+═══════════════════════════════════════════ -->
+<div id="page-register" class="page">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a onclick="show('landing')">Home</a></li>
+      <li><a>Events</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="btn btn-outline btn-sm" onclick="show('login')">Login</button>
+    </div>
+  </nav>
+
+  <div class="form-page">
+    <div class="form-card">
+      <div class="form-title">Create Account</div>
+      <div class="form-sub">Join EventHub to organise or attend events <span class="annot">JS validation</span></div>
+
+      <div class="form-group">
+        <label>Role <span class="annot">required</span></label>
+        <select>
+          <option value="">— Select your role —</option>
+          <option>Attendee</option>
+          <option>Organiser</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Full Name <span class="annot">required</span></label>
+        <input type="text" placeholder="e.g. Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Email Address <span class="annot">valid format check</span></label>
+        <input type="email" placeholder="jane@example.com">
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Password <span class="annot">policy enforced</span></label>
+          <input type="password" placeholder="••••••••">
+          <div class="form-hint">Min 6 chars · 1 upper · 1 lower · 1 special</div>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password <span class="annot">must match</span></label>
+          <input type="password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="this.closest('.form-card').querySelectorAll('input,select').forEach(e=>e.value='')">Reset</button>
+        <button class="btn btn-primary" onclick="show('landing')">Register</button>
+      </div>
+      <div class="link-row">Already have an account? <a onclick="show('login')">Login here</a></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub</p>
+    <div class="footer-links"><a>Privacy</a><a>Terms</a></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — LOGIN
+═══════════════════════════════════════════ -->
+<div id="page-login" class="page">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a onclick="show('landing')">Home</a></li>
+      <li><a>Events</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="btn btn-primary btn-sm" onclick="show('register')">Register</button>
+    </div>
+  </nav>
+
+  <div class="form-page">
+    <div class="form-card">
+      <div class="form-title">Welcome Back</div>
+      <div class="form-sub">Sign in to your EventHub account <span class="annot">JS validation</span></div>
+
+      <div class="form-group">
+        <label>Email Address <span class="annot">required</span></label>
+        <input type="email" placeholder="jane@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password <span class="annot">required</span></label>
+        <input type="password" placeholder="••••••••">
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" style="flex:1" onclick="show('landing')">Login</button>
+      </div>
+      <div class="divider">or</div>
+      <div class="link-row">Don't have an account? <a onclick="show('register')">Register now</a></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub</p>
+    <div class="footer-links"><a>Privacy</a><a>Terms</a></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — CREATE EVENT
+═══════════════════════════════════════════ -->
+<div id="page-create-event" class="page">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a onclick="show('landing')">Home</a></li>
+      <li><a onclick="show('event-mgmt')">My Events</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="user-chip"><div class="avatar">JD</div> Jane D. <span class="role-pill">Organiser</span></div>
+    </div>
+  </nav>
+
+  <div class="content-wrap" style="max-width:760px;margin:0 auto;width:100%;">
+    <div class="page-header">
+      <h2>Create New Event <span class="annot">JS validation</span></h2>
+      <button class="btn btn-ghost btn-sm" onclick="show('event-mgmt')">← Back to Events</button>
+    </div>
+
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:32px;">
+      <div class="form-group">
+        <label>Event Title <span class="annot">required</span></label>
+        <input type="text" placeholder="e.g. Annual Coding Bootcamp">
+      </div>
+      <div class="form-group">
+        <label>Description <span class="annot">required</span></label>
+        <textarea rows="4" placeholder="Describe the event…" style="resize:vertical;"></textarea>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Start Date &amp; Time <span class="annot">required</span></label>
+          <input type="datetime-local">
+        </div>
+        <div class="form-group">
+          <label>End Date &amp; Time <span class="annot">required</span></label>
+          <input type="datetime-local">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Location <span class="annot">required</span></label>
+          <input type="text" placeholder="Venue / Address">
+        </div>
+        <div class="form-group">
+          <label>Capacity <span class="annot">required</span></label>
+          <input type="number" placeholder="e.g. 200">
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Ticket Price ($) <span class="annot">required</span></label>
+          <input type="number" step="0.01" placeholder="0.00 for free">
+        </div>
+        <div class="form-group">
+          <label>Status <span class="annot">required</span></label>
+          <select>
+            <option>Draft</option>
+            <option>Confirmed</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Event Image <span class="annot">optional</span></label>
+        <div class="upload-box">📁 &nbsp; Click or drag to upload image</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="this.closest('div').querySelectorAll('input,select,textarea').forEach(e=>e.value='')">Reset Form</button>
+        <button class="btn btn-primary" onclick="alert('New event has been created');show('event-mgmt')">Create Event</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub</p>
+    <div class="footer-links"><a>Privacy</a><a>Terms</a></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — EVENT MANAGEMENT
+═══════════════════════════════════════════ -->
+<div id="page-event-mgmt" class="page">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a onclick="show('landing')">Home</a></li>
+      <li><a class="active">My Events</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="user-chip"><div class="avatar">JD</div> Jane D. <span class="role-pill">Organiser</span></div>
+    </div>
+  </nav>
+
+  <div class="content-wrap">
+    <div class="page-header">
+      <h2>Event Management <span class="annot">4 dummy events</span></h2>
+      <button class="btn btn-primary btn-sm" onclick="show('create-event')">+ Create Event</button>
+    </div>
+
+    <div style="overflow-x:auto;background:var(--panel);border:1px solid var(--border);border-radius:12px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Date &amp; Time</th>
+            <th>Organiser</th>
+            <th>Status</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style="font-weight:600;">Summer Sound Festival 2026</div>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Join us for a night of live music from local and interstate acts at the waterfront…</div>
+            </td>
+            <td>12 Jul 2026<br><span style="color:var(--muted);font-size:.78rem;">6:00 PM</span></td>
+            <td>Jane Doe</td>
+            <td><span class="badge badge-confirmed">Confirmed</span></td>
+            <td>500</td>
+            <td><div class="td-actions">
+              <button class="btn btn-ghost btn-sm" onclick="alert('Edit event: Summer Sound Festival')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="alert('Delete event: Summer Sound Festival')">Delete</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600;">DevConf Tasmania 2026</div>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Two-day developer conference featuring talks on AI, cloud infrastructure and open…</div>
+            </td>
+            <td>5 Aug 2026<br><span style="color:var(--muted);font-size:.78rem;">9:00 AM</span></td>
+            <td>Jane Doe</td>
+            <td><span class="badge badge-confirmed">Confirmed</span></td>
+            <td>250</td>
+            <td><div class="td-actions">
+              <button class="btn btn-ghost btn-sm" onclick="alert('Edit event: DevConf Tasmania')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="alert('Delete event: DevConf Tasmania')">Delete</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600;">Watercolour Workshop for Beginners</div>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Learn foundational watercolour techniques with professional artist Sarah Lim in a…</div>
+            </td>
+            <td>22 Aug 2026<br><span style="color:var(--muted);font-size:.78rem;">2:00 PM</span></td>
+            <td>Jane Doe</td>
+            <td><span class="badge badge-draft">Draft</span></td>
+            <td>30</td>
+            <td><div class="td-actions">
+              <button class="btn btn-ghost btn-sm" onclick="alert('Edit event: Watercolour Workshop')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="alert('Delete event: Watercolour Workshop')">Delete</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600;">Startup Pitch Night – Hobart</div>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Eight local startups present their ideas to a panel of investors and industry leaders…</div>
+            </td>
+            <td>3 Jun 2026<br><span style="color:var(--muted);font-size:.78rem;">7:00 PM</span></td>
+            <td>Jane Doe</td>
+            <td><span class="badge badge-cancelled">Cancelled</span></td>
+            <td>120</td>
+            <td><div class="td-actions">
+              <button class="btn btn-ghost btn-sm" onclick="alert('Edit event: Startup Pitch Night')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="alert('Delete event: Startup Pitch Night')">Delete</button>
+            </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:.75rem;color:var(--muted);">Showing 4 events — sorted newest to oldest <span class="annot">descending date order</span></div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub</p>
+    <div class="footer-links"><a>Privacy</a><a>Terms</a></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 6 — ADMIN DASHBOARD
+═══════════════════════════════════════════ -->
+<div id="page-admin" class="page">
+  <nav>
+    <div class="nav-logo">Event<span>Hub</span></div>
+    <ul class="nav-links">
+      <li><a onclick="show('landing')">Home</a></li>
+      <li><a onclick="show('event-mgmt')">Events</a></li>
+      <li><a class="active">Dashboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="user-chip">
+        <div class="avatar" style="background:linear-gradient(135deg,var(--danger),#c0392b);">AD</div>
+        Admin
+        <span class="role-pill" style="background:rgba(224,82,82,.15);color:var(--danger);border-color:rgba(224,82,82,.3);">Admin</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-wrap">
+    <div class="page-header">
+      <h2>Admin Dashboard</h2>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-val" style="color:var(--teal);">142</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-val" style="color:var(--accent);">38</div>
+        <div class="stat-label">Total Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-val" style="color:var(--success);">14</div>
+        <div class="stat-label">Upcoming Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎟</div>
+        <div class="stat-val" style="color:#b07eff;">319</div>
+        <div class="stat-label">Registrations</div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-panel">
+        <h3>📅 All Events <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="show('create-event')">+ New</button></h3>
+        <table>
+          <thead><tr><th>Title</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Summer Sound Festival</td>
+              <td><span class="badge badge-confirmed">Confirmed</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit event')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete event')">Del</button>
+              </div></td>
+            </tr>
+            <tr>
+              <td>DevConf Tasmania</td>
+              <td><span class="badge badge-confirmed">Confirmed</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit event')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete event')">Del</button>
+              </div></td>
+            </tr>
+            <tr>
+              <td>Watercolour Workshop</td>
+              <td><span class="badge badge-draft">Draft</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit event')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete event')">Del</button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="admin-panel">
+        <h3>👥 All Users <button class="btn btn-primary btn-sm" style="margin-left:auto;">+ Add User</button></h3>
+        <table>
+          <thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>
+                <div>Jane Doe</div>
+                <div style="font-size:.72rem;color:var(--muted);">jane@example.com</div>
+              </td>
+              <td><span class="badge" style="background:rgba(46,196,182,.15);color:var(--teal);">Organiser</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit user')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete user')">Del</button>
+              </div></td>
+            </tr>
+            <tr>
+              <td>
+                <div>Alex Kim</div>
+                <div style="font-size:.72rem;color:var(--muted);">alex@example.com</div>
+              </td>
+              <td><span class="badge" style="background:rgba(176,126,255,.15);color:#b07eff;">Attendee</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit user')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete user')">Del</button>
+              </div></td>
+            </tr>
+            <tr>
+              <td>
+                <div>Maria Torres</div>
+                <div style="font-size:.72rem;color:var(--muted);">admin@eventhub.com</div>
+              </td>
+              <td><span class="badge" style="background:rgba(224,82,82,.15);color:var(--danger);">Admin</span></td>
+              <td><div class="td-actions">
+                <button class="btn btn-ghost btn-sm" onclick="alert('Edit user')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="alert('Delete user')">Del</button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;font-size:.75rem;color:var(--muted);">
+          <span class="annot">promote / demote</span> controls available in full edit view
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 EventHub</p>
+    <div class="footer-links"><a>Privacy</a><a>Terms</a></div>
+  </footer>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pg-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const map = {landing:0,register:1,login:2,'create-event':3,'event-mgmt':4,admin:5};
+  document.querySelectorAll('.pg-btn')[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
