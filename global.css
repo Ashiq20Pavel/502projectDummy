@@ -1,0 +1,259 @@
+:root {
+    /* Primary */
+    --primary-100: #faf4ff;
+    --primary-200: #f5e9fe;
+    --primary: #d49bf9;
+    --primary-400: #c87cf6;
+    --primary-500: #7c1fac;
+
+    /* Secondary */
+    --secondary-100: #e6fffb;
+    --secondary-200: #b2f5ea;
+    --secondary: #3fd1b2;
+    --secondary-400: #2bb39a;
+    --secondary-500: #1f7a6e;
+
+    /* Neutral */
+    --white: #ffffff;
+    --grey-100: #fafafa;
+    --grey-200: #efefef;
+    --grey-300: #dcdcdc;
+    --grey-400: #bdbdbd;
+    --grey-500: #989898;
+    --grey-600: #7c7c7c;
+    --grey-700: #656565;
+    --grey-800: #3d3d3d;
+    --black: #212121;
+
+    /* States */
+    --danger: #f32929;
+    --danger-400: #be1717;
+    --danger-100: #ffe1e1;
+    --success: #4bb543;
+    --warning: #ff7e37;
+
+    /* Background */
+    --background: #f8f8f8;
+
+    /* Font*/
+    --font-family: 'Lexend', sans-serif;
+
+    /* Font Sizes */
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 24px;
+}
+
+html,
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-md);
+    color: var(--black);
+    background-color: var(--background);
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: var(--font-xl);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+h2 {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+h3 {
+    font-size: var(--font-md);
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+h4 {
+    font-size: var(--font-sm);
+    font-weight: 500;
+    margin-bottom: 0.5em;
+}
+
+p {
+    font-size: var(--font-md);
+    line-height: 1.5em;
+    margin-bottom: 1em;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary);
+    transition: color 0.2s ease;
+}
+a:hover {
+    color: var(--primary-400);
+}
+
+/*Text Utilities */
+
+.text-primary {
+    color: var(--primary) !important;
+}
+.text-primary-hover:hover {
+    color: var(--primary-400) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+.text-secondary-hover:hover {
+    color: var(--secondary-400) !important;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+.text-danger-hover:hover {
+    color: var(--danger-400) !important;
+}
+
+.text-white {
+    color: var(--white) !important;
+}
+.text-black {
+    color: var(--black) !important;
+}
+.text-muted {
+    color: var(--grey-500) !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+.text-left {
+    text-align: left !important;
+}
+.text-right {
+    text-align: right !important;
+}
+
+.font-xs {
+    font-size: var(--font-xs) !important;
+}
+.font-sm {
+    font-size: var(--font-sm) !important;
+}
+.font-md {
+    font-size: var(--font-md) !important;
+}
+.font-lg {
+    font-size: var(--font-lg) !important;
+}
+.font-xl {
+    font-size: var(--font-xl) !important;
+}
+
+/* Base Button */
+.btn {
+    font-family: var(--font-family);
+    border-radius: 8px;
+    min-width: 100px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    color: var(--white);
+}
+
+/* Sizes */
+.btn-sm {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+.btn-md {
+    padding: 12px 16px;
+    font-size: 16px;
+}
+.btn-lg {
+    padding: 16px 20px;
+    font-size: 18px;
+}
+
+/* Primary Buttons */
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+}
+.btn-primary:hover {
+    background-color: var(--primary-400);
+}
+.btn-text-primary {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 16px;
+}
+.btn-text-primary:hover {
+    color: var(--primary-400);
+}
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary-400);
+    color: var(--white);
+}
+
+/* Secondary Buttons */
+.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-400);
+}
+.btn-text-secondary {
+    background: transparent;
+    border: none;
+    color: var(--secondary);
+    font-size: 16px;
+}
+.btn-text-secondary:hover {
+    color: var(--secondary-400);
+}
+.btn-outline-secondary {
+    background: transparent;
+    border: 1px solid var(--secondary);
+    color: var(--secondary);
+}
+.btn-outline-secondary:hover {
+    background-color: var(--secondary);
+    border-color: var(--secondary-400);
+    color: var(--white);
+}
+
+/* Danger/Error Buttons */
+.btn-danger {
+    background-color: var(--danger);
+    color: var(--white);
+}
+.btn-danger:hover {
+    background-color: var(--danger-400);
+}
+.btn-text-danger {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+}
+.btn-text-danger:hover {
+    color: var(--danger-400);
+}
+
+/* Disabled */
+.btn:disabled {
+    cursor: not-allowed;
+    background-color: var(--grey-300);
+    border-color: var(--grey-400);
+    color: var(--grey-500);
+}
