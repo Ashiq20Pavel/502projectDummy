@@ -1,0 +1,81 @@
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #132c3a;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+label {
+    font-weight: 500;
+}
+
+input,
+textarea,
+select {
+    background-color: #0f1923;
+    color: white;
+    border: 1px solid #2ec4b6;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+.is-invalid {
+    border-color: #e05252 !important;
+}
+
+.error-msg {
+    color: #e05252;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.btn-primary {
+    background-color: #2ec4b6;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #27b3a8;
+}
+
+.btn-reset {
+    background-color: #e8a020;
+    border: none;
+    color: black;
+}
+
+.btn-reset:hover {
+    background-color: #e8a020;
+    color: white;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: 1px dashed #2ec4b6;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #94a3b8;
+}
+
+.file-input-wrapper input[type='file'] {
+    display: none;
+}
